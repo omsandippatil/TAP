@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Quest - Leaderboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F4EBD0;
+            --border: #332D2D;
+            --primary: #FF6B35;
+            --secondary: #70AE6E;
+            --accent: #826AED;
+            --card-pink: #F7A8B8;
+            --shadow: 4px 4px 0px var(--border);
+            --active-shadow: 2px 2px 0px var(--border);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--border);
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 280px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 100vh;
+            padding-bottom: 8px;
+        }
+
+        header {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .title-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: var(--border);
+        }
+
+        .chip {
+            padding: 6px 12px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            background: white;
+            font-weight: 800;
+            font-size: 0.65rem;
+            box-shadow: 2px 2px 0px var(--border);
+            white-space: nowrap;
+        }
+
+        main {
+            flex: 1;
+            padding: 0 14px;
+            overflow-y: auto;
+            padding-bottom: 58px;
+            position: relative;
+        }
+        
+        main::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent 0%, var(--bg) 70%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        main::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        main::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .leaderboard-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .leaderboard-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .time-period {
+            font-size: 0.65rem;
+            font-weight: 800;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .podium-place {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .podium-stand {
+            width: 100%;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px 8px 0 0;
+            padding: 10px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .podium-place:nth-child(2) .podium-stand {
+            height: 130px;
+            background: var(--secondary);
+            color: white;
+        }
+
+        .podium-place:nth-child(1) .podium-stand {
+            height: 105px;
+            background: var(--accent);
+            color: white;
+        }
+
+        .podium-place:nth-child(3) .podium-stand {
+            height: 85px;
+            background: var(--primary);
+            color: white;
+        }
+
+        .podium-rank {
+            position: absolute;
+            top: -12px;
+            width: 24px;
+            height: 24px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            box-shadow: 2px 2px 0px var(--border);
+        }
+
+        .podium-emoji {
+            font-size: 28px;
+            margin-top: 8px;
+        }
+
+        .podium-name {
+            font-size: 0.7rem;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .podium-role {
+            font-size: 0.55rem;
+            text-align: center;
+            opacity: 0.9;
+            font-weight: 700;
+        }
+
+        .podium-xp {
+            font-size: 0.65rem;
+            font-weight: 800;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--border);
+            opacity: 0.8;
+            margin: 16px 0 8px 0;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .ranking-item {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .ranking-item:active {
+            transform: translate(2px, 2px);
+            box-shadow: var(--active-shadow);
+        }
+
+        .ranking-item.highlight {
+            background: var(--card-pink);
+        }
+
+        .rank-number {
+            width: 24px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .user-emoji {
+            font-size: 24px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .user-role {
+            font-size: 0.6rem;
+            opacity: 0.7;
+            font-weight: 700;
+        }
+
+        .user-xp {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .navbar {
+            position: absolute;
+            bottom: 6px;
+            left: 14px;
+            right: 14px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-around;
+            padding: 6px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .nav-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            border-color: var(--border);
+            box-shadow: 2px 2px 0px var(--border);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--border);
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .nav-item.active svg {
+            stroke: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div class="title-brand">Leaderboard</div>
+        <div class="chip" style="background: var(--secondary); color: white;">🏆 TEAM</div>
+    </header>
+
+    <main>
+        <div class="leaderboard-header">
+            <div class="leaderboard-title">TOP PERFORMERS</div>
+            <div class="time-period">EdTech Dream Team</div>
+        </div>
+
+        <div class="podium">
+            <div class="podium-place">
+                <div class="podium-stand">
+                    <div class="podium-rank">#2</div>
+                    <div class="podium-emoji">👨‍💼</div>
+                    <div class="podium-name">PRASHANT</div>
+                    <div class="podium-role">CMA</div>
+                    <div class="podium-xp">9,840 XP</div>
+                </div>
+            </div>
+            
+            <div class="podium-place">
+                <div class="podium-stand">
+                    <div class="podium-rank">#1</div>
+                    <div class="podium-emoji">🎯</div>
+                    <div class="podium-name">ANAND</div>
+                    <div class="podium-role">CEO</div>
+                    <div class="podium-xp">10,120 XP</div>
+                </div>
+            </div>
+            
+            <div class="podium-place">
+                <div class="podium-stand">
+                    <div class="podium-rank">#3</div>
+                    <div class="podium-emoji">👩‍💼</div>
+                    <div class="podium-name">MONICA</div>
+                    <div class="podium-role">Co-Founder</div>
+                    <div class="podium-xp">9,650 XP</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">🎮 The Tech Squad</div>
+        
+        <div class="ranking-item">
+            <div class="rank-number">4</div>
+            <div class="user-emoji">👩‍💻</div>
+            <div class="user-info">
+                <div class="user-name">HIMANI SUYAL</div>
+                <div class="user-role">Tech Head</div>
+            </div>
+            <div class="user-xp">8,490</div>
+        </div>
+
+        <div class="ranking-item">
+            <div class="rank-number">5</div>
+            <div class="user-emoji">⚙️</div>
+            <div class="user-info">
+                <div class="user-name">MAYANK DUBEY</div>
+                <div class="user-role">Tech Lead</div>
+            </div>
+            <div class="user-xp">7,310</div>
+        </div>
+
+        <div class="section-title">📋 Operations Master</div>
+
+        <div class="ranking-item">
+            <div class="rank-number">6</div>
+            <div class="user-emoji">📊</div>
+            <div class="user-info">
+                <div class="user-name">AKANSHA CHITCHOT</div>
+                <div class="user-role">Admin</div>
+            </div>
+            <div class="user-xp">6,890</div>
+        </div>
+
+        <div class="section-title">🎨 The Intern Survivors</div>
+
+        <div class="ranking-item highlight">
+            <div class="rank-number">7</div>
+            <div class="user-emoji">👩‍💻</div>
+            <div class="user-info">
+                <div class="user-name">DURVA DONGRE</div>
+                <div class="user-role">Design Intern (still alive)</div>
+            </div>
+            <div class="user-xp">247</div>
+        </div>
+
+        <div class="ranking-item highlight">
+            <div class="rank-number">8</div>
+            <div class="user-emoji">👨‍💻</div>
+            <div class="user-info">
+                <div class="user-name">OM PATIL</div>
+                <div class="user-role">Tech Intern (also alive)</div>
+            </div>
+            <div class="user-xp">198</div>
+        </div>
+
+        <div class="section-title">💡 Fun Facts</div>
+
+        <div class="ranking-item" style="background: var(--accent); color: white; border-color: var(--border);">
+            <div style="font-size: 0.65rem; line-height: 1.4; font-weight: 600;">
+                🎯 <strong>Leadership XP:</strong> Includes years of experience × coffee consumed × patience with interns
+            </div>
+        </div>
+
+        <div class="ranking-item" style="background: var(--secondary); color: white; border-color: var(--border);">
+            <div style="font-size: 0.65rem; line-height: 1.4; font-weight: 600;">
+                👨‍💻 <strong>Tech Squad XP:</strong> Lines of code written ÷ bugs created × Stack Overflow visits
+            </div>
+        </div>
+
+        <div class="ranking-item" style="background: var(--primary); color: white; border-color: var(--border);">
+            <div style="font-size: 0.65rem; line-height: 1.4; font-weight: 600;">
+                🎨 <strong>Intern XP:</strong> Survival days × learning curve - existential crises + free food score
+            </div>
+        </div>
+    </main>
+
+    <nav class="navbar">
+        <a href="home.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </a>
+        <a href="search.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </a>
+        <a href="leaderboard.html" class="nav-item active">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+    </nav>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Quest UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F4EBD0;
+            --border: #332D2D;
+            --primary: #FF6B35;
+            --secondary: #70AE6E;
+            --accent: #826AED;
+            --card-pink: #F7A8B8;
+            --shadow: 4px 4px 0px var(--border);
+            --active-shadow: 2px 2px 0px var(--border);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--border);
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 280px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 100vh;
+            padding-bottom: 8px;
+        }
+
+        header {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--card-pink);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 2px 2px 0px var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .title-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: var(--border);
+        }
+
+        main {
+            flex: 1;
+            padding: 0 14px;
+            overflow-y: auto;
+            padding-bottom: 58px;
+            position: relative;
+        }
+        
+        main::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent 0%, var(--bg) 70%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        main::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        main::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .course-section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--border);
+            opacity: 0.8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .card:active {
+            transform: translate(2px, 2px);
+            box-shadow: var(--active-shadow);
+        }
+
+        .card-green { background-color: var(--secondary); color: white; }
+        .card-orange { background-color: var(--primary); color: white; }
+        .card-purple { background-color: var(--accent); color: white; }
+        .card-pink { background-color: var(--card-pink); color: var(--border); }
+
+        .card-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+            font-weight: 800;
+        }
+
+        .card-subtitle {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            font-weight: 700;
+        }
+
+        .visual-element {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            font-size: 40px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        .navbar {
+            position: absolute;
+            bottom: 6px;
+            left: 14px;
+            right: 14px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-around;
+            padding: 6px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .nav-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            border-color: var(--border);
+            box-shadow: 2px 2px 0px var(--border);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--border);
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .nav-item.active svg {
+            stroke: white;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .chip {
+            padding: 6px 12px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            background: white;
+            font-weight: 800;
+            font-size: 0.65rem;
+            box-shadow: 2px 2px 0px var(--border);
+            white-space: nowrap;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            max-width: 220px;
+            width: 100%;
+            box-shadow: 6px 6px 0px var(--border);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .modal-text {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .quiz-option {
+            padding: 8px;
+            margin: 6px 0;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.75rem;
+            box-shadow: 3px 3px 0px var(--border);
+            transition: transform 0.1s;
+        }
+
+        .quiz-option:active {
+            transform: translate(2px, 2px);
+            box-shadow: var(--active-shadow);
+        }
+
+        .quiz-option.correct {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .quiz-option.wrong {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin: 12px 0;
+        }
+
+        .formula-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--border);
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .formula-card:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--border);
+        }
+
+        .formula-card.matched {
+            background: var(--secondary);
+            color: white;
+            opacity: 0.6;
+        }
+
+        .formula-card.selected {
+            background: var(--accent);
+            color: white;
+        }
+
+        .close-btn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 8px;
+            background: var(--primary);
+            color: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--border);
+            font-size: 0.75rem;
+        }
+
+        .close-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--border);
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div class="user-profile">
+            <div class="avatar">👾</div>
+            <div class="title-brand">Level</div>
+        </div>
+        <div class="chip">LVL 42</div>
+    </header>
+
+    <main>
+        <div class="stats-row">
+            <div class="chip" style="background: white; color: var(--border); border-color: var(--border);">⭐ 2,450</div>
+            <div class="chip" style="background: var(--primary); color: white; border-color: var(--border);">🔥 12 DAY</div>
+        </div>
+
+        <div class="course-section">
+            <div class="section-title">📚 Current Course</div>
+            
+            <div class="card card-green" onclick="openModal('theory')">
+                <div class="card-subtitle">Module 1 • Lesson 3</div>
+                <div class="card-title">Photosynthesis</div>
+                <div class="card-subtitle">Learn the Process</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <div class="visual-element">🌿</div>
+            </div>
+        </div>
+
+        <div class="course-section">
+            <div class="section-title">✏️ Practice</div>
+            
+            <div class="card card-purple" onclick="openModal('quiz')">
+                <div class="card-subtitle">Module 1 • Quiz</div>
+                <div class="card-title">Cell Biology</div>
+                <div class="card-subtitle">5 Questions • 10 min</div>
+                <div class="visual-element">🔬</div>
+            </div>
+        </div>
+
+        <div class="course-section">
+            <div class="section-title">🎮 Learning Game</div>
+            
+            <div class="card card-orange" onclick="openModal('game')">
+                <div class="card-subtitle">Educational Challenge</div>
+                <div class="card-title">Formula Matcher</div>
+                <div class="card-subtitle">Match Biology Concepts</div>
+                <div class="visual-element">🧬</div>
+            </div>
+        </div>
+
+        <div class="course-section">
+            <div class="section-title">📖 Next Up</div>
+            
+            <div class="card card-pink" onclick="openModal('theory')">
+                <div class="card-subtitle">Module 2 • Lesson 1</div>
+                <div class="card-title">Cell Division</div>
+                <div class="card-subtitle">Mitosias & Meiosis</div>
+                <div class="visual-element">🧫</div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="navbar">
+        <a href="home.html" class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </a>
+        <a href="search.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </a>
+        <a href="leaderboard.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+    </nav>
+</div>
+
+<!-- Theory Modal -->
+<div id="theoryModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">🌿 Photosynthesis</div>
+        <div class="modal-text">
+            <strong>The Process:</strong><br>
+            Photosynthesis converts light energy into chemical energy stored in glucose.
+            <br><br>
+            <strong>Chemical Equation:</strong><br>
+            6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂
+            <br><br>
+            <strong>Key Stages:</strong><br>
+            1. <strong>Light Reactions:</strong> Occur in thylakoids, produce ATP and NADPH<br>
+            2. <strong>Calvin Cycle:</strong> Occurs in stroma, fixes CO₂ into glucose
+            <br><br>
+            💡 Plants produce oxygen as a byproduct, which all animals need to survive!
+        </div>
+        <button class="close-btn" onclick="closeModal('theory')">Continue Learning ✓</button>
+    </div>
+</div>
+
+<!-- Quiz Modal -->
+<div id="quizModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">🔬 Cell Biology Quiz</div>
+        <div class="modal-text">
+            <strong>Question 1 of 1:</strong><br>
+            What organelle is known as the "powerhouse of the cell"?
+        </div>
+        <div id="quizOptions">
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Nucleus</div>
+            <div class="quiz-option" onclick="checkAnswer(this, true)">Mitochondria</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Ribosome</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Chloroplast</div>
+        </div>
+        <div id="quizResult" style="display: none; margin-top: 12px; font-weight: 800; text-align: center;"></div>
+        <button class="close-btn" onclick="closeModal('quiz')">Close</button>
+    </div>
+</div>
+
+<!-- Game Modal -->
+<div id="gameModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">🧬 Formula Matcher</div>
+        <div class="modal-text">Match biology formulas with their processes! Click pairs that belong together.</div>
+        <div class="score-display">Score: <span id="scoreCount">0</span> / 4</div>
+        <div class="game-board" id="gameBoard"></div>
+        <button class="close-btn" onclick="resetGame()">New Game</button>
+        <button class="close-btn" onclick="closeModal('game')" style="background: var(--border); margin-top: 8px;">Close</button>
+    </div>
+</div>
+
+<script>
+// Modal Functions
+function openModal(type) {
+    if (type === 'theory') {
+        document.getElementById('theoryModal').classList.add('active');
+    } else if (type === 'quiz') {
+        document.getElementById('quizModal').classList.add('active');
+        resetQuiz();
+    } else if (type === 'game') {
+        document.getElementById('gameModal').classList.add('active');
+        initGame();
+    }
+}
+
+function closeModal(type) {
+    if (type === 'theory') {
+        document.getElementById('theoryModal').classList.remove('active');
+    } else if (type === 'quiz') {
+        document.getElementById('quizModal').classList.remove('active');
+    } else if (type === 'game') {
+        document.getElementById('gameModal').classList.remove('active');
+    }
+}
+
+// Quiz Functions
+function resetQuiz() {
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => {
+        opt.classList.remove('correct', 'wrong');
+        opt.style.pointerEvents = 'auto';
+    });
+    document.getElementById('quizResult').style.display = 'none';
+}
+
+function checkAnswer(element, isCorrect) {
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => opt.style.pointerEvents = 'none');
+    
+    if (isCorrect) {
+        element.classList.add('correct');
+        document.getElementById('quizResult').textContent = '🎉 Correct! Mitochondria produce ATP through cellular respiration. +100 XP';
+        document.getElementById('quizResult').style.color = 'var(--secondary)';
+    } else {
+        element.classList.add('wrong');
+        const correct = Array.from(options).find(opt => opt.textContent === 'Mitochondria');
+        correct.classList.add('correct');
+        document.getElementById('quizResult').textContent = '❌ The correct answer is Mitochondria. Keep studying!';
+        document.getElementById('quizResult').style.color = '#FF6B6B';
+    }
+    document.getElementById('quizResult').style.display = 'block';
+}
+
+// Educational Matching Game
+const gamePairs = [
+    { id: 1, text: 'Photosynthesis', type: 'process' },
+    { id: 1, text: '6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂', type: 'formula' },
+    { id: 2, text: 'Cellular Respiration', type: 'process' },
+    { id: 2, text: 'C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP', type: 'formula' },
+    { id: 3, text: 'Water Formula', type: 'process' },
+    { id: 3, text: 'H₂O', type: 'formula' },
+    { id: 4, text: 'Glucose Formula', type: 'process' },
+    { id: 4, text: 'C₆H₁₂O₆', type: 'formula' }
+];
+
+let selectedCards = [];
+let matchedPairs = 0;
+let score = 0;
+
+function initGame() {
+    const shuffled = [...gamePairs].sort(() => Math.random() - 0.5);
+    selectedCards = [];
+    matchedPairs = 0;
+    score = 0;
+    document.getElementById('scoreCount').textContent = score;
+    
+    const board = document.getElementById('gameBoard');
+    board.innerHTML = '';
+    
+    shuffled.forEach((card, index) => {
+        const tile = document.createElement('div');
+        tile.className = 'formula-card';
+        tile.textContent = card.text;
+        tile.dataset.id = card.id;
+        tile.dataset.index = index;
+        tile.onclick = () => selectCard(tile, card);
+        board.appendChild(tile);
+    });
+}
+
+function selectCard(tile, card) {
+    if (tile.classList.contains('matched') || tile.classList.contains('selected')) return;
+    if (selectedCards.length === 2) return;
+    
+    tile.classList.add('selected');
+    selectedCards.push({ tile, card });
+    
+    if (selectedCards.length === 2) {
+        setTimeout(() => {
+            const [first, second] = selectedCards;
+            
+            if (first.card.id === second.card.id) {
+                first.tile.classList.remove('selected');
+                second.tile.classList.remove('selected');
+                first.tile.classList.add('matched');
+                second.tile.classList.add('matched');
+                matchedPairs++;
+                score++;
+                document.getElementById('scoreCount').textContent = score;
+                
+                if (matchedPairs === gamePairs.length / 2) {
+                    setTimeout(() => {
+                        alert('🎉 Perfect! You matched all biology concepts! +500 XP');
+                    }, 300);
+                }
+            } else {
+                first.tile.classList.remove('selected');
+                second.tile.classList.remove('selected');
+            }
+            selectedCards = [];
+        }, 800);
+    }
+}
+
+function resetGame() {
+    initGame();
+}
+</script>
+
+</body>
+</html>

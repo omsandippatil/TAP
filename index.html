@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Level - Learning Reimagined</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Courier New', monospace;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+  display: grid;
+  grid-template-columns: 1fr 280px 1fr;
+  gap: 100px;
+  width: 100%;
+  max-width: 1800px;
+  padding: 60px;
+  align-items: center;
+  height: 100vh;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.section h2 {
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: #666;
+  margin-bottom: 30px;
+  font-weight: 400;
+}
+.section h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  color: #fff;
+  line-height: 1.2;
+}
+.section p {
+  font-size: 16px;
+  line-height: 1.9;
+  color: #888;
+  max-width: 520px;
+}
+.phone-mockup {
+  width: 280px;
+  height: 580px;
+  background: #1a1a1a;
+  border-radius: 35px;
+  padding: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+}
+.screen-content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+.info-list {
+  list-style: none;
+  margin-top: 35px;
+}
+.info-list li {
+  padding: 14px 0;
+  border-bottom: 1px solid #222;
+  color: #666;
+  font-size: 14px;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+}
+.info-list li span {
+  color: #fff;
+}
+@media (max-width: 1600px) {
+  .container {
+    max-width: 1600px;
+    gap: 80px;
+  }
+  .section p {
+    max-width: 450px;
+  }
+}
+@media (max-width: 1400px) {
+  .container {
+    max-width: 1400px;
+    gap: 60px;
+  }
+  .section h1 {
+    font-size: 42px;
+  }
+  .section p {
+    max-width: 400px;
+    font-size: 15px;
+  }
+}
+@media (max-width: 1200px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    justify-items: center;
+  }
+  .section {
+    text-align: center;
+    align-items: center;
+  }
+  .section p {
+    max-width: 500px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="section">
+    <h2>CONCEPT</h2>
+    <h1>PROJECT LEVEL</h1>
+    <p>Learning architecture for the AI generation. Moving beyond chat responses to structured knowledge systems that teach, not just answer.</p>
+  </div>
+  
+  <div class="phone-mockup">
+    <div class="phone-screen">
+      <div class="screen-content">
+        <iframe src="home.html" title="Project Level Interface"></iframe>
+      </div>
+    </div>
+  </div>
+  
+  <div class="section">
+    <h2>INTERFACE</h2>
+    <h1>FOUR CORES</h1>
+    <p>Navigate through the mobile interface to explore each module. The system adapts to your learning path.</p>
+    <ul class="info-list">
+      <li>HOME <span>Roadmap View</span></li>
+      <li>SEARCH <span>Course Index</span></li>
+      <li>LEADERBOARD <span>Progress Rank</span></li>
+      <li>PROFILE <span>Stats Dashboard</span></li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

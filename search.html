@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Quest - Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F4EBD0;
+            --border: #332D2D;
+            --primary: #FF6B35;
+            --secondary: #70AE6E;
+            --accent: #826AED;
+            --card-pink: #F7A8B8;
+            --shadow: 4px 4px 0px var(--border);
+            --active-shadow: 2px 2px 0px var(--border);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--border);
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 280px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 100vh;
+            padding-bottom: 8px;
+        }
+
+        header {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--card-pink);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 2px 2px 0px var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .title-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: var(--border);
+        }
+
+        main {
+            flex: 1;
+            padding: 0 14px;
+            overflow-y: auto;
+            padding-bottom: 58px;
+            position: relative;
+        }
+        
+        main::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent 0%, var(--bg) 70%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        main::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        main::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .search-section {
+            margin-bottom: 16px;
+        }
+
+        .search-bar {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search-icon {
+            font-size: 16px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--border);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .search-input::placeholder {
+            color: var(--border);
+            opacity: 0.5;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-chips::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .filter-chips::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .filter-chips::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .chip {
+            padding: 6px 12px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            background: white;
+            font-weight: 800;
+            font-size: 0.65rem;
+            box-shadow: 2px 2px 0px var(--border);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .chip:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--border);
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--border);
+            opacity: 0.8;
+            margin: 16px 0 8px 0;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .card:active {
+            transform: translate(2px, 2px);
+            box-shadow: var(--active-shadow);
+        }
+
+        .card-green { background-color: var(--secondary); color: white; }
+        .card-orange { background-color: var(--primary); color: white; }
+        .card-purple { background-color: var(--accent); color: white; }
+        .card-pink { background-color: var(--card-pink); color: var(--border); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 6px;
+        }
+
+        .card-badge {
+            padding: 3px 8px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.55rem;
+            font-weight: 800;
+            box-shadow: 2px 2px 0px var(--border);
+        }
+
+        .card-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+            font-weight: 800;
+        }
+
+        .card-subtitle {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .card-description {
+            font-size: 0.65rem;
+            opacity: 0.85;
+            line-height: 1.3;
+            margin-top: 6px;
+        }
+
+        .visual-element {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            font-size: 40px;
+            opacity: 0.9;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 2px solid rgba(51, 45, 45, 0.2);
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 8px;
+            font-size: 0.6rem;
+            font-weight: 800;
+        }
+
+        .subscribe-btn {
+            padding: 4px 10px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            box-shadow: 2px 2px 0px var(--border);
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .subscribe-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--border);
+        }
+
+        .navbar {
+            position: absolute;
+            bottom: 6px;
+            left: 14px;
+            right: 14px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-around;
+            padding: 6px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .nav-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            border-color: var(--border);
+            box-shadow: 2px 2px 0px var(--border);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--border);
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .nav-item.active svg {
+            stroke: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div class="user-profile">
+            <div class="avatar">👾</div>
+            <div class="title-brand">Search</div>
+        </div>
+        <div class="chip">LVL 42</div>
+    </header>
+
+    <main>
+        <div class="search-section">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search courses...">
+            </div>
+            
+            <div class="filter-chips">
+                <div class="chip active" onclick="filterCourses('all', this)">ALL</div>
+                <div class="chip" onclick="filterCourses('science', this)">SCIENCE</div>
+                <div class="chip" onclick="filterCourses('math', this)">MATH</div>
+                <div class="chip" onclick="filterCourses('tech', this)">TECH</div>
+                <div class="chip" onclick="filterCourses('popular', this)">POPULAR</div>
+            </div>
+        </div>
+
+        <div class="section-title">🔥 Popular Courses</div>
+        
+        <div class="card card-green">
+            <div class="card-header">
+                <div>
+                    <div class="card-subtitle">12 Levels • 6-8 Weeks</div>
+                    <div class="card-title">Advanced Biology</div>
+                </div>
+                <div class="card-badge" style="background: white; color: var(--secondary);">POPULAR</div>
+            </div>
+            <div class="card-description">
+                Deep dive into cellular mechanisms, genetics, and evolution. Perfect for competitive exam prep.
+            </div>
+            <div class="card-footer">
+                <div class="card-stats">
+                    <span>👥 2.4K</span>
+                    <span>✓ 94%</span>
+                </div>
+                <div class="subscribe-btn" style="background: white; color: var(--secondary);">SUBSCRIBE</div>
+            </div>
+            <div class="visual-element">🧬</div>
+        </div>
+
+        <div class="card card-purple">
+            <div class="card-header">
+                <div>
+                    <div class="card-subtitle">15 Levels • 8-10 Weeks</div>
+                    <div class="card-title">Organic Chemistry</div>
+                </div>
+                <div class="card-badge" style="background: white; color: var(--accent);">NEW</div>
+            </div>
+            <div class="card-description">
+                Master reactions, mechanisms, and synthesis. Gamified approach to the toughest subject.
+            </div>
+            <div class="card-footer">
+                <div class="card-stats">
+                    <span>👥 1.8K</span>
+                    <span>✓ 87%</span>
+                </div>
+                <div class="subscribe-btn" style="background: white; color: var(--accent);">SUBSCRIBE</div>
+            </div>
+            <div class="visual-element">⚗️</div>
+        </div>
+
+        <div class="section-title">📚 All Courses</div>
+
+        <div class="card card-orange">
+            <div class="card-header">
+                <div>
+                    <div class="card-subtitle">10 Levels • 4-6 Weeks</div>
+                    <div class="card-title">Calculus Foundations</div>
+                </div>
+                <div class="card-badge" style="background: white; color: var(--primary);">TRENDING</div>
+            </div>
+            <div class="card-description">
+                From limits to integrals. Build intuition through visual, interactive challenges.
+            </div>
+            <div class="card-footer">
+                <div class="card-stats">
+                    <span>👥 3.1K</span>
+                    <span>✓ 91%</span>
+                </div>
+                <div class="subscribe-btn" style="background: white; color: var(--primary);">SUBSCRIBE</div>
+            </div>
+            <div class="visual-element">∫</div>
+        </div>
+
+        <div class="card card-pink">
+            <div class="card-header">
+                <div>
+                    <div class="card-subtitle">14 Levels • 7-9 Weeks</div>
+                    <div class="card-title">Physics Mechanics</div>
+                </div>
+            </div>
+            <div class="card-description">
+                Kinematics to dynamics. Solve real-world problems with pixel-perfect simulations.
+            </div>
+            <div class="card-footer">
+                <div class="card-stats">
+                    <span>👥 2.7K</span>
+                    <span>✓ 89%</span>
+                </div>
+                <div class="subscribe-btn" style="background: var(--border); color: white;">SUBSCRIBE</div>
+            </div>
+            <div class="visual-element">⚡</div>
+        </div>
+
+        <div class="card card-green">
+            <div class="card-header">
+                <div>
+                    <div class="card-subtitle">8 Levels • 3-5 Weeks</div>
+                    <div class="card-title">Environmental Science</div>
+                </div>
+            </div>
+            <div class="card-description">
+                Explore ecosystems, climate change, and sustainability through interactive missions.
+            </div>
+            <div class="card-footer">
+                <div class="card-stats">
+                    <span>👥 1.5K</span>
+                    <span>✓ 92%</span>
+                </div>
+                <div class="subscribe-btn" style="background: white; color: var(--secondary);">SUBSCRIBE</div>
+            </div>
+            <div class="visual-element">🌍</div>
+        </div>
+
+        <div class="card card-purple">
+            <div class="card-header">
+                <div>
+                    <div class="card-subtitle">11 Levels • 5-7 Weeks</div>
+                    <div class="card-title">Computer Science</div>
+                </div>
+            </div>
+            <div class="card-description">
+                Learn algorithms, data structures, and problem-solving through coding challenges.
+            </div>
+            <div class="card-footer">
+                <div class="card-stats">
+                    <span>👥 4.2K</span>
+                    <span>✓ 88%</span>
+                </div>
+                <div class="subscribe-btn" style="background: white; color: var(--accent);">SUBSCRIBE</div>
+            </div>
+            <div class="visual-element">💻</div>
+        </div>
+    </main>
+
+    <nav class="navbar">
+        <a href="home.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </a>
+        <a href="search.html" class="nav-item active">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </a>
+        <a href="leaderboard.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+    </nav>
+</div>
+
+<script>
+function filterCourses(category, element) {
+    // Remove active class from all chips
+    document.querySelectorAll('.chip').forEach(chip => {
+        chip.classList.remove('active');
+    });
+    
+    // Add active class to clicked chip
+    element.classList.add('active');
+    
+    // Here you would implement actual filtering logic
+    console.log('Filtering by:', category);
+}
+</script>
+
+</body>
+</html>
