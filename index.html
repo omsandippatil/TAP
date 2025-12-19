@@ -3,69 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Project Level - Learning Reimagined</title>
+<title>Project Level - Proposal</title>
 <style>
+/* THEME & RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   font-family: 'Courier New', monospace;
   background: #0a0a0a;
   color: #e0e0e0;
   overflow: hidden;
   height: 100vh;
+}
+
+/* SLIDE SYSTEM */
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.container {
-  display: grid;
-  grid-template-columns: 1fr 280px 1fr;
-  gap: 100px;
-  width: 100%;
-  max-width: 1800px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   padding: 60px;
-  align-items: center;
-  height: 100vh;
 }
-.section {
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.slide-content {
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* TYPOGRAPHY */
+h1 { font-size: 64px; letter-spacing: -1px; color: #fff; line-height: 1.1; margin-bottom: 25px; }
+h2 { font-size: 12px; letter-spacing: 4px; color: #555; margin-bottom: 20px; text-transform: uppercase; }
+h3 { font-size: 32px; color: #fff; margin-bottom: 20px; }
+p { font-size: 18px; line-height: 1.6; color: #aaa; margin-bottom: 20px; }
+.highlight { color: #fff; background: #1a1a1a; padding: 4px 8px; border-radius: 4px; }
+
+/* GRID & CARD SYMMETRY */
+.grid-2 { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 30px; 
+  align-items: stretch; /* Fixes asymmetry */
+}
+
+.card {
+  background: #111;
+  border: 1px solid #222;
+  padding: 30px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
 }
-.section h2 {
-  font-size: 14px;
-  letter-spacing: 3px;
-  color: #666;
-  margin-bottom: 30px;
-  font-weight: 400;
-}
-.section h1 {
-  font-size: 48px;
+
+.card h4 { color: #fff; margin-bottom: 12px; font-size: 18px; letter-spacing: 1px; }
+.card p { font-size: 15px; color: #777; margin-bottom: 0; }
+
+/* STATS & TABLES */
+.stat-box {
+  background: #0f0f0f;
+  border-left: 3px solid #333;
+  padding: 25px;
   margin-bottom: 20px;
-  letter-spacing: 2px;
-  color: #fff;
-  line-height: 1.2;
 }
-.section p {
-  font-size: 16px;
-  line-height: 1.9;
-  color: #888;
-  max-width: 520px;
+.stat-box .num { font-size: 48px; color: #fff; font-weight: bold; }
+.stat-box .label { font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+
+.table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 25px; 
+  font-size: 14px; 
+  border: 1px solid #222;
+}
+.table th { text-align: left; padding: 15px; background: #151515; color: #fff; border-bottom: 1px solid #222; }
+.table td { padding: 15px; border-bottom: 1px solid #222; color: #888; }
+.table tr:last-child td { border-bottom: none; }
+
+/* MOCKUP */
+.mockup-container {
+  display: grid;
+  grid-template-columns: 1.2fr 280px 1fr;
+  gap: 60px;
+  align-items: center;
 }
 .phone-mockup {
   width: 280px;
   height: 580px;
   background: #1a1a1a;
   border-radius: 35px;
-  padding: 8px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 10px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
 }
 .phone-screen {
   width: 100%;
@@ -73,100 +116,208 @@ body {
   background: #000;
   border-radius: 28px;
   overflow: hidden;
-  position: relative;
 }
-.screen-content {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-.info-list {
-  list-style: none;
-  margin-top: 35px;
-}
-.info-list li {
-  padding: 14px 0;
-  border-bottom: 1px solid #222;
-  color: #666;
-  font-size: 14px;
-  letter-spacing: 1px;
-  display: flex;
-  justify-content: space-between;
-}
-.info-list li span {
-  color: #fff;
-}
-@media (max-width: 1600px) {
-  .container {
-    max-width: 1600px;
-    gap: 80px;
-  }
-  .section p {
-    max-width: 450px;
-  }
-}
-@media (max-width: 1400px) {
-  .container {
-    max-width: 1400px;
-    gap: 60px;
-  }
-  .section h1 {
-    font-size: 42px;
-  }
-  .section p {
-    max-width: 400px;
-    font-size: 15px;
-  }
-}
-@media (max-width: 1200px) {
-  .container {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    justify-items: center;
-  }
-  .section {
-    text-align: center;
-    align-items: center;
-  }
-  .section p {
-    max-width: 500px;
-  }
+iframe { width: 100%; height: 100%; border: none; }
+
+/* UI */
+.slide-number { position: fixed; top: 40px; right: 60px; font-size: 12px; color: #444; }
+.nav-hint { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #333; letter-spacing: 2px; }
+
+@media (max-width: 1100px) {
+  .mockup-container { grid-template-columns: 1fr; }
+  .phone-mockup { display: none; }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="section">
-    <h2>CONCEPT</h2>
-    <h1>PROJECT LEVEL</h1>
-    <p>Learning architecture for the AI generation. Moving beyond chat responses to structured knowledge systems that teach, not just answer.</p>
+
+<div class="slide-number" id="slideNumber">01 / 08</div>
+<div class="nav-hint">SPACE / ARROWS TO NAVIGATE</div>
+
+<div class="slide active" data-slide="1">
+  <div class="slide-content">
+    <h2>Project Proposal</h2>
+    <h1>BEYOND<br>THE CHAT</h1>
+    <p>Every student loves AI, but <span class="highlight">talking to AI isn't learning from AI.</span></p>
+    <p>Current AI tools are like learning from a dictionary—they give you definitions, but they don't teach you the language. We are building the teacher.</p>
   </div>
-  
-  <div class="phone-mockup">
-    <div class="phone-screen">
-      <div class="screen-content">
-        <iframe src="home.html" title="Project Level Interface"></iframe>
+</div>
+
+<div class="slide" data-slide="2">
+  <div class="slide-content">
+    <h2>The Student Reality</h2>
+    <h3>Chat is a mess. Learning needs a map.</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>The "Memory" Problem</h4>
+        <p>Knowledge is scattered across 50 different chat threads. Finding a specific explanation from last week is nearly impossible. Students lose interest when they lose their progress.</p>
+      </div>
+      <div class="card">
+        <h4>The "Starting" Problem</h4>
+        <p>If you don't know what to ask, chat is useless. Students get confused and stop. We provide the "First Step" so they never have to guess what to learn next.</p>
       </div>
     </div>
   </div>
-  
-  <div class="section">
-    <h2>INTERFACE</h2>
-    <h1>FOUR CORES</h1>
-    <p>Navigate through the mobile interface to explore each module. The system adapts to your learning path.</p>
-    <ul class="info-list">
-      <li>HOME <span>Roadmap View</span></li>
-      <li>SEARCH <span>Course Index</span></li>
-      <li>LEADERBOARD <span>Progress Rank</span></li>
-      <li>PROFILE <span>Stats Dashboard</span></li>
-    </ul>
+</div>
+
+<div class="slide" data-slide="3">
+  <div class="slide-content">
+    <h2>The Xerox Analogy</h2>
+    <h3>Stop paying for the same answer twice.</h3>
+    <p>When 50 students ask the same question, current AI "prints" a new answer for each. It's expensive and slow. </p>
+    <div class="grid-2">
+      <div class="stat-box">
+        <div class="label">Traditional AI (The Print Shop)</div>
+        <div class="num" style="color: #ff4d4d;">50x</div>
+        <p style="font-size: 12px; margin-top: 10px;">Costly, redundant, and unpredictable.</p>
+      </div>
+      <div class="stat-box">
+        <div class="label">Project Level (The Xerox)</div>
+        <div class="num" style="color: #00ff88;">1x</div>
+        <p style="font-size: 12px; margin-top: 10px;">Generate once, serve 50,000 times for free.</p>
+      </div>
+    </div>
   </div>
 </div>
+
+<div class="slide" data-slide="4">
+  <div class="slide-content">
+    <h2>The Economics</h2>
+    <h3>₹4.20 per student, per year.</h3>
+    <p>This is <span class="highlight">cheaper than printing a physical textbook</span> and significantly more effective than a static PDF.</p>
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Token Usage</th>
+          <th>Cost Pattern</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Chat-Based:</strong> 100 students ask the same question</td>
+          <td>~100,000</td>
+          <td>Pay per student (Scales poorly)</td>
+        </tr>
+        <tr>
+          <td><strong>Project Level:</strong> Generate once, serve 100 students</td>
+          <td>~1,000</td>
+          <td>Pay once (Scales infinitely)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size: 14px; color: #555; margin-top: 20px;">At 70,000 students, we move from burning cash to sustainable scaling.</p>
+  </div>
+</div>
+
+<div class="slide" data-slide="5">
+  <div class="slide-content">
+    <h2>The Solution</h2>
+    <h3>Teaching AI, not Talking AI.</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>New Learning Platform</h4>
+        <p>Proactive teaching. It tells the student: "Here is what you need to know today." It builds foundations before they get confused.</p>
+      </div>
+      <div class="card" style="border-color: #444;">
+        <h4>TAP Buddy</h4>
+        <p>The reactive partner. When a student has a specific doubt about the lesson, TAP Buddy answers. Textbook meets Tutor.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-slide="6">
+  <div class="slide-content">
+    <h2>Research-Based Impact</h2>
+    <h3>Science, not just software.</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Spaced Practice</h4>
+        <p>Retention improves by <span class="highlight">30-50%</span> when students review concepts at set intervals. We automate this.</p>
+      </div>
+      <div class="card">
+        <h4>Micro-Lessons</h4>
+        <p>5-10 minute "bursts" of learning reduce cognitive load and build daily habits that actually stick.</p>
+      </div>
+    </div>
+    <p style="margin-top: 30px; font-size: 15px; color: #666;">You can't build a house by piling bricks in a heap; you need a blueprint. We are that blueprint.</p>
+  </div>
+</div>
+
+<div class="slide" data-slide="7">
+  <div class="slide-content">
+    <h2>The 6-Week Sprint</h2>
+    <h3>From Concept to Pilot.</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Weeks 1-3: The Engine</h4>
+        <p>Researching student gaps and engineering AI to generate verified, structured lesson frameworks.</p>
+      </div>
+      <div class="card">
+        <h4>Weeks 4-6: The Pilot</h4>
+        <p>Building the interface and running a live test with 30 students to measure retention and "fun" factor.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-slide="8">
+  <div class="slide-content">
+    <div class="mockup-container">
+      <div>
+        <h2>Final Preview</h2>
+        <h1 style="font-size: 48px;">PROJECT<br>LEVEL</h1>
+        <p>A structured knowledge system for the AI generation. Built to be offline-first and stupidly cheap at scale.</p>
+      </div>
+      
+      <div class="phone-mockup">
+        <div class="phone-screen">
+          <iframe src="home.html"></iframe>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Core Modules</h4>
+        <p style="font-size: 13px; line-height: 2;">
+          • ROADMAP: Automated curriculum<br>
+          • SEARCH: Verified Index<br>
+          • STATS: Mastery tracking<br>
+          • RANK: Social motivation
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSlide = 1;
+const totalSlides = 8;
+
+function updateSlide() {
+  document.querySelectorAll('.slide').forEach((slide, index) => {
+    slide.classList.remove('active');
+    if (index + 1 === currentSlide) slide.classList.add('active');
+  });
+  
+  document.getElementById('slideNumber').textContent = 
+    String(currentSlide).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+}
+
+function next() { if (currentSlide < totalSlides) { currentSlide++; updateSlide(); } }
+function prev() { if (currentSlide > 1) { currentSlide--; updateSlide(); } }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') next();
+  if (e.key === 'ArrowLeft') prev();
+});
+
+document.addEventListener('click', (e) => {
+  if (e.clientX > window.innerWidth / 2) next();
+  else prev();
+});
+</script>
+
 </body>
 </html>
